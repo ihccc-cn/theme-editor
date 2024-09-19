@@ -7,11 +7,12 @@ body {
   &-title {
     font-size: 16px;
     font-weight: bold;
+    color: var(--color-text, #393939);
   }
 
   &-btn-group {
     display: flex;
-    gap: 16px;
+    gap: var(--size-cell-gap, 16px);
   }
 
   // 布局
@@ -24,13 +25,14 @@ body {
 
   &-header {
     padding-block: var(--size-cell-gap, 16px);
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid var(--color-border, #d9d9d9);
   }
 
   &-body {
     padding-block: var(--size-cell-gap, 16px);
+    box-sizing: border-box;
     display: flex;
-    gap: 16px;
+    gap: var(--size-cell-gap, 16px);
   }
 
   &-editor-content {
@@ -41,21 +43,28 @@ body {
     flex: 2;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--size-cell-gap, 16px);
     height: calc(100vh - 97px);
     overflow: auto;
   }
 
-  // 操作栏
-  &-tool {
+  // 首部栏
+  &-head-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
 
-    &-title {
-      font-size: 24px;
-      margin-right: 16px;
-    }
+  &-head-main {
+    display: flex;
+    align-items: center;
+    gap: var(--size-cell-gap, 16px);
+  }
+
+  &-head-title &-title {
+    margin-right: var(--size-cell-gap, 16px);
+    font-size: 24px;
+    color: var(--color-primary, #3b82f6);
   }
 
   // 编辑器
@@ -63,7 +72,7 @@ body {
     &-content {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: var(--size-cell-gap, 16px);
     }
 
     &-list {
@@ -71,7 +80,7 @@ body {
       flex-direction: column;
       gap: 8px;
       padding-right: 8px;
-      height: calc(100vh - 180px);
+      height: calc(100vh - 145px);
       overflow: auto;
     }
   }
@@ -81,9 +90,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    background: #fff;
+    background: var(--color-bg-component, #ffffff);
     padding: 8px;
-    border-radius: 6px;
+    border-radius: var(--size-border-radius, 6px);
     font-size: 14px;
 
     &-row {
@@ -91,17 +100,19 @@ body {
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: var(--size-cell-gap, 16px);
     }
 
     &-label {
       font-size: 16px;
       font-weight: bold;
+      color: var(--color-text, #393939);
     }
 
     &-name {
-      color: #b9b9b9;
-      opacity: 0;
+      color: var(--color-text-desc, #a9a9a9);
+      // opacity: 0;
+      // transition: 0.2s;
     }
 
     &-value {
@@ -109,7 +120,7 @@ body {
     }
 
     &-extra {
-      color: #797979;
+      color: var(--color-text-secondary, #535353);
     }
 
     &-item {
@@ -126,20 +137,28 @@ body {
       width: 100px;
     }
 
-    &:hover &-name {
-      opacity: 1;
-    }
+    // &:hover &-name {
+    //   opacity: 1;
+    // }
   }
 
   &-theme-view-body {
-    margin-top: 16px;
-    padding: 16px;
-    background: #e5e5e5;
+    position: relative;
+    margin-top: var(--size-cell-gap, 16px);
+    padding: var(--size-cell-gap, 16px);
+    background: var(--color-bg-component, #ffffff);
   }
 
-  &-inputer {
+  &-theme-view-type {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &-importer {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--size-cell-gap, 16px);
   }
 }

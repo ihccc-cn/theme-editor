@@ -9,13 +9,17 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "ahooks": "^3.8.1",
-    "antd": "^5.20.6",
-    "umi": "^4.3.20"
+    "ahooks": "3.8.1",
+    "antd": "5.20.6",
+    "clsx": "2.1.1",
+    "file-saver": "2.0.5",
+    "lodash": "4.17.21",
+    "react-copy-to-clipboard": "5.1.0",
+    "umi": "4.3.20"
   },
   "devDependencies": {
-    "@types/react": "^18.0.33",
-    "@types/react-dom": "^18.0.11",
-    "typescript": "^5.0.3"
+    "@types/react": "18.0.33",
+    "@types/react-dom": "18.0.11",
+    "typescript": "5.0.3"
   }
 }
