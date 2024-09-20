@@ -87,7 +87,7 @@ const getThemeRules = (css: string): TThemeData | null => {
       value: null,
     };
     // theme.name = cssLine.match(/--((\w|-)+)/)?.[1] || "";
-    theme.name = (cssLine.match(/(.+):/)?.[1] || "").replace(/\s+/g, "");
+    theme.name = (cssLine.match(/(.+?):/)?.[1] || "").replace(/\s+/g, "");
     if (!theme.name) continue;
     theme.value = cssLine.match(/:\s*(.+);/)?.[1] || "";
     const note = noteLine.match(/\/\*\s*(.+)\*\//)?.[1];
@@ -124,7 +124,8 @@ const buildCssStyle = (themeData: TThemeData) => {
       const cssRule = `  ${item.name}: ${item.value};`;
       return [note, cssRule].join("\n");
     });
-  return `[data-theme="${themeName}"]{
+  return `@import url(/editor-theme/ant.var.css);
+[data-theme="${themeName}"]{
 ${css.join("\n")}
 }`;
 };
@@ -279,21 +280,25 @@ const EditorForm: FC<{
       <HeadBar title="编辑器" extra={extra} />
       <div className="we-theme-editor-list">
         {data.map((item, index) => {
-          const onChange = (e: React.FormEvent) =>
-            onThemeChange?.(getValue(e, item.type), index, item);
           return (
             <ThemeRule data={item} key={item.name}>
               <div className="we-theme-rule-item">
                 {item.type !== "input" && (
                   <div className="we-theme-rule-view">
-                    <Input value={item.value} onChange={onChange} />
+                    <Input
+                      value={item.value}
+                      onChange={(e: React.FormEvent) =>
+                        onThemeChange?.(getValue(e), index, item)
+                      }
+                    />
                   </div>
                 )}
                 <div className="we-theme-rule-input">
                   {React.isValidElement(inputs[item.type])
                     ? React.cloneElement(inputs[item.type], {
                         value: item.value,
-                        onChange,
+                        onChange: (e: React.FormEvent) =>
+                          onThemeChange?.(getValue(e, item.type), index, item),
                       })
                     : item.value}
                 </div>
@@ -387,6 +392,7 @@ const Importer: FC<{
         </Upload>
         <Button
           type="primary"
+          disabled={!input}
           onClick={() => {
             onConfirm?.(input);
             // setInput("");
@@ -503,7 +509,7 @@ const Editor: FC<{}> = () => {
       } catch (error) {}
     }
     if (importType === "CSS") res = getThemeRules(content);
-    if (!res) {
+    if (!res || !res.themeName || !Array.isArray(res.list)) {
       message.error("导入数据格式错误！");
       return;
     }

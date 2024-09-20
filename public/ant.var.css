@@ -1,4 +1,4 @@
-[data-theme='defaultDark'] .css-var-r0 {
+#root .css-var-r0 {
   --ant-color-primary: var(--color-primary);
   --ant-color-primary-hover: var(--color-primary-hover);
   --ant-color-bg-container: var(--color-bg-component);
@@ -20,17 +20,17 @@
   --ant-color-split: var(--color-border-secondary);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-modal-css-var {
+#root .css-var-r0.ant-modal-css-var {
   --ant-modal-header-bg: var(--color-bg-component);
   --ant-modal-content-bg: var(--color-bg-component);
   --ant-modal-title-color: var(--color-text);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-card {
+#root .css-var-r0.ant-card {
   --ant-card-actions-bg: var(--color-bg);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-table {
+#root .css-var-r0.ant-table {
   --ant-table-header-bg: var(--color-bg);
   --ant-table-header-color: var(--color-text);
   --ant-table-header-split-color: var(--color-border);
@@ -40,14 +40,14 @@
   --ant-table-expand-icon-bg: var(--color-bg);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-breadcrumb {
+#root .css-var-r0.ant-breadcrumb {
   --ant-breadcrumb-item-color: var(--color-text);
   --ant-breadcrumb-last-item-color: var(--color-text);
   --ant-breadcrumb-link-color: var(--color-text);
   --ant-breadcrumb-separator-color: var(--color-text-desc);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-tabs-css-var {
+#root .css-var-r0.ant-tabs-css-var {
   --ant-tabs-item-color: var(--color-text);
   --ant-tabs-item-selected-color: var(--color-primary);
   --ant-tabs-ink-bar-color: var(--color-primary);
@@ -55,32 +55,32 @@
   --ant-tabs-item-active-color: var(--color-primary);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-picker-calendar {
+#root .css-var-r0.ant-picker-calendar {
   --ant-calendar-full-bg: var(--color-bg-component);
   --ant-calendar-full-panel-bg: var(--color-bg-component);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-select-css-var {
+#root .css-var-r0.ant-select-css-var {
   --ant-select-selector-bg: var(--color-bg);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-radio-css-var {
+#root .css-var-r0.ant-radio-css-var {
   --ant-radio-button-bg: var(--color-bg-component);
   --ant-radio-button-checked-bg: var(--color-bg-component);
   --ant-radio-button-color: var(--color-text);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-form-css-var {
+#root .css-var-r0.ant-form-css-var {
   --ant-form-label-color: var(--color-text);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-input-css-var {
+#root .css-var-r0.ant-input-css-var {
   --ant-input-active-bg: var(--color-bg-component);
   --ant-input-hover-bg: var(--color-bg-component-hover);
   --ant-input-active-border-color: var(--color-primary);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-btn {
+#root .css-var-r0.ant-btn {
   --ant-button-default-bg: var(--color-bg-component);
   --ant-button-default-hover-bg: var(--color-bg-component-hover);
   --ant-button-default-active-bg: var(--color-bg-component-hover);
@@ -94,13 +94,13 @@
   --ant-button-default-active-color: var(--color-primary-active);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-pagination {
+#root .css-var-r0.ant-pagination {
   --ant-pagination-item-bg: var(--color-bg-component);
   --ant-pagination-item-active-bg: var(--color-bg-component);
   --ant-pagination-hover-bg: var(--color-bg-component-hover);
   --ant-pagination-active-bg: var(--color-bg-component-hover);
 }
 
-[data-theme='defaultDark'] .css-var-r0.ant-switch {
+#root .css-var-r0.ant-switch {
   --ant-switch-handle-bg: var(--color-bg-component-hover);
 }
