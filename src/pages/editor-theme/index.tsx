@@ -124,8 +124,8 @@ const buildCssStyle = (themeData: TThemeData) => {
       const cssRule = `  ${item.name}: ${item.value};`;
       return [note, cssRule].join("\n");
     });
-  return `@import url(/editor-theme/ant.var.css);
-[data-theme="${themeName}"]{
+  // return `@import url(/editor-theme/ant.var.css);
+  return `[data-theme="${themeName}"]{
 ${css.join("\n")}
 }`;
 };
@@ -274,7 +274,6 @@ const EditorForm: FC<{
   inputs?: Record<string, React.ReactElement>;
   onThemeChange?: (value: any, index: number, item: any) => any;
 }> = ({ extra, data = [], inputs = {}, onThemeChange }) => {
-  // FIXME: 对 value 进行单位分离处理
   return (
     <div className="we-theme-editor-content">
       <HeadBar title="编辑器" extra={extra} />
@@ -378,7 +377,7 @@ const Importer: FC<{
             // setInput("");
           }}
         >
-          取消
+          关闭
         </Button>
         <Upload
           accept={{ JSON: ".json", CSS: ".css" }[type || "JSON"]}
@@ -440,7 +439,7 @@ const Exporter: FC<{
             setInput("");
           }}
         >
-          取消
+          关闭
         </Button>
         <Button
           onClick={() => {
