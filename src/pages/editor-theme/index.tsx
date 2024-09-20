@@ -76,7 +76,7 @@ const getThemeRules = (css: string): TThemeData | null => {
   const start = /data-theme/.test(lines[0]) ? 1 : 0;
 
   for (let i = start; i < lines.length; i += 2) {
-    const remarkLine = lines[i];
+    const noteLine = lines[i];
     const cssLine = lines[i + 1];
     if (!cssLine) continue;
     const theme: TThemeRule = {
@@ -90,9 +90,9 @@ const getThemeRules = (css: string): TThemeData | null => {
     theme.name = (cssLine.match(/(.+):/)?.[1] || "").replace(/\s+/g, "");
     if (!theme.name) continue;
     theme.value = cssLine.match(/:\s*(.+);/)?.[1] || "";
-    const remark = remarkLine.match(/\/\*\s*(.+)\*\//)?.[1];
-    if (!!remark) {
-      const [label, desc] = remark.split(/:|：/);
+    const note = noteLine.match(/\/\*\s*(.+)\*\//)?.[1];
+    if (!!note) {
+      const [label, desc] = note.split(/:|：/);
       theme.label = (label || "").trim();
       theme.desc = (desc || "").trim();
     }
@@ -130,6 +130,31 @@ ${css.join("\n")}
 };
 
 const copySuccess = () => message.success("拷贝成功！");
+
+const SliderWithUnit: FC<{
+  value?: any;
+  onChange?: (value: any) => void;
+}> = ({ value, onChange }) => {
+  const [val, unit] = React.useMemo(() => {
+    const val = /^(\d|\.)+/.exec(value)?.[0] || 0;
+    const uni = /^\d+(\w+)/.exec(value)?.[1] || "";
+    return [val as number, uni];
+  }, [value]);
+
+  const handleChange = (e: number) => {
+    onChange?.(getValue(e) + (unit || 0));
+  };
+
+  return (
+    <Slider
+      tooltip={{ open: false }}
+      min={0}
+      max={2000}
+      value={val}
+      onChange={handleChange}
+    />
+  );
+};
 
 // 布局
 const Layout: FC<{ tool: any; editor?: any; view?: any }> = ({
@@ -351,7 +376,7 @@ const Importer: FC<{
           取消
         </Button>
         <Upload
-          accept=".css,.json"
+          accept={{ JSON: ".json", CSS: ".css" }[type || "JSON"]}
           fileList={[]}
           beforeUpload={(file: File) => {
             readFile(file, (content: string) => setInput(content));
@@ -454,7 +479,7 @@ const useVisible = (
 const inputs = {
   color: <ColorPicker showText placement="right" />,
   number: <InputNumber />,
-  pixel: <Slider tooltip={{ open: false }} />,
+  pixel: <SliderWithUnit />,
   input: <Input />,
 };
 const Editor: FC<{}> = () => {
