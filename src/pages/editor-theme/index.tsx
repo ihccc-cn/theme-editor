@@ -358,7 +358,7 @@ const Importer: FC<{
             return false;
           }}
         >
-          <Button>添加</Button>
+          <Button>上传</Button>
         </Upload>
         <Button
           type="primary"
