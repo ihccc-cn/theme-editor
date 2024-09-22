@@ -46,8 +46,22 @@ export default {
     {
       type: "color",
       label: "状态色",
+      desc: "默认次要",
+      name: "--color-status-default-secondary",
+      value: "#cfcfcf",
+    },
+    {
+      type: "color",
+      label: "状态色",
       desc: "进行中",
       name: "--color-status-processing",
+      value: "#2196f3",
+    },
+    {
+      type: "color",
+      label: "状态色",
+      desc: "进行中次要",
+      name: "--color-status-processing-secondary",
       value: "#2196f3",
     },
     {
@@ -60,6 +74,13 @@ export default {
     {
       type: "color",
       label: "状态色",
+      desc: "成功次要",
+      name: "--color-status-success-secondary",
+      value: "#4caf50",
+    },
+    {
+      type: "color",
+      label: "状态色",
       desc: "警告",
       name: "--color-status-warning",
       value: "#ff9800",
@@ -67,8 +88,22 @@ export default {
     {
       type: "color",
       label: "状态色",
+      desc: "警告次要",
+      name: "--color-status-warning-secondary",
+      value: "#ff9800",
+    },
+    {
+      type: "color",
+      label: "状态色",
       desc: "错误",
       name: "--color-status-error",
+      value: "#f44336",
+    },
+    {
+      type: "color",
+      label: "状态色",
+      desc: "错误次要",
+      name: "--color-status-error-secondary",
       value: "#f44336",
     },
     {
@@ -386,7 +421,7 @@ export default {
       desc: "",
       name: "font-family",
       value:
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,"Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
     },
     {
       type: "input",

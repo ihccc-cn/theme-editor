@@ -23,29 +23,81 @@ body {
     font-family: 黑体;
   }
 
-  &-header {
+  &-layout-header {
     padding-block: var(--size-cell-gap, 16px);
     border-bottom: 1px solid var(--color-border, #d9d9d9);
   }
 
-  &-body {
+  &-layout-body {
     padding-block: var(--size-cell-gap, 16px);
     box-sizing: border-box;
     display: flex;
     gap: var(--size-cell-gap, 16px);
+    transition: 0.2s ease-in-out;
   }
 
-  &-editor-content {
+  &-layout-side-content {
+    position: fixed;
+    top: 80px;
+    bottom: var(--size-cell-gap, 16px);
+    left: -100%;
+    z-index: 99;
+    transition: 0.2s ease-in-out;
+
+    .ant-tabs {
+      height: 100%;
+    }
+
+    .ant-tabs-nav {
+      border-right: 1px solid var(--color-border, #d9d9d9);
+
+      .ant-tabs-nav-add {
+        margin-top: 2px;
+        border-radius: var(--size-border-radius, 6px) 0 0
+          var(--size-border-radius, 6px);
+      }
+
+      .ant-tabs-tab {
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--size-cell-gap-sm, 8px) 0 !important;
+      }
+
+      .ant-tabs-tab-btn {
+        writing-mode: tb;
+        // letter-spacing: 4px;
+      }
+
+      .ant-tabs-tab-remove {
+        margin-top: var(--size-cell-gap-sm, 8px);
+        margin-left: 0;
+      }
+    }
+
+    .ant-tabs-content-holder {
+      display: none;
+    }
+  }
+
+  &-layout-editor-content {
     flex: 1;
   }
 
-  &-view-content {
+  &-layout-view-content {
     flex: 2;
     display: flex;
     flex-direction: column;
     gap: var(--size-cell-gap, 16px);
     height: calc(100vh - 97px);
     overflow: auto;
+  }
+
+  &-layout-open-side &-layout-body {
+    padding-left: 60px;
+  }
+
+  &-layout-open-side &-layout-side-content {
+    left: var(--size-cell-gap, 16px);
   }
 
   // 首部栏
@@ -56,6 +108,12 @@ body {
   }
 
   &-head-main {
+    display: flex;
+    align-items: center;
+    gap: var(--size-cell-gap, 16px);
+  }
+
+  &-head-extra {
     display: flex;
     align-items: center;
     gap: var(--size-cell-gap, 16px);
@@ -72,15 +130,22 @@ body {
     &-content {
       display: flex;
       flex-direction: column;
-      gap: var(--size-cell-gap, 16px);
+      flex: 1;
+      // gap: var(--size-cell-gap-sm, 8px);
+
+      .ant-tabs-nav {
+        margin-bottom: 0;
+      }
     }
 
     &-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding-right: 8px;
-      height: calc(100vh - 145px);
+      height: calc(100vh - 167px);
+      padding-top: var(--size-cell-gap-sm, 8px);
+      padding-right: var(--size-cell-gap-sm, 8px);
+      box-sizing: border-box;
       overflow: auto;
     }
   }
@@ -94,6 +159,10 @@ body {
     padding: 8px;
     border-radius: var(--size-border-radius, 6px);
     font-size: 14px;
+
+    &-remove {
+      background-color: var(--color-bg-component-disabled, #e2e2e2);
+    }
 
     &-row {
       display: flex;
@@ -134,7 +203,7 @@ body {
     }
 
     &-view {
-      width: 100px;
+      width: 150px;
     }
 
     // &:hover &-name {

@@ -11,14 +11,24 @@
   --color-primary-active: #2e74e6;
   /* 状态色：默认 */
   --color-status-default: #9e9e9e;
+  /* 状态色：默认次要 */
+  --color-status-default-secondary: #cfcfcf;
   /* 状态色：进行中 */
   --color-status-processing: #2196f3;
+  /* 状态色：进行中次要 */
+  --color-status-processing-secondary: #2196f3;
   /* 状态色：成功 */
   --color-status-success: #4caf50;
+  /* 状态色：成功次要 */
+  --color-status-success-secondary: #4caf50;
   /* 状态色：警告 */
   --color-status-warning: #ff9800;
+  /* 状态色：警告次要 */
+  --color-status-warning-secondary: #ff9800;
   /* 状态色：错误 */
   --color-status-error: #f44336;
+  /* 状态色：错误次要 */
+  --color-status-error-secondary: #f44336;
   /* 文字颜色 */
   --color-text: #393939;
   /* 文字颜色：次要 */
