@@ -26,6 +26,6 @@ export type TThemeData = {
 
 export type TGroupedData = {
   defaultKey: string;
-  group: { label: groupName; key: groupName }[];
+  group: { label: string; key: string }[];
   list: Record<string, any>;
 };

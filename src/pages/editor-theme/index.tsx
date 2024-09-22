@@ -48,6 +48,10 @@ const Editor: FC<{}> = () => {
   // 当前分组方式
   const [groupByType, setGroupByType] = React.useState<string>("byName");
 
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-theme", themeTabKey);
+  }, [themeTabKey]);
+
   // 主题新增删除
   const handleThemeEdit = React.useCallback(
     (
@@ -137,7 +141,7 @@ const Editor: FC<{}> = () => {
 
   // 主题分组选中值
   const groupTabKeyActive =
-    theme.list[themeIndex].groupKey || groupedData.defaultKey;
+    theme.list[themeIndex]?.groupKey || groupedData.defaultKey;
 
   // 主题变量转换为 css (实时)
   const cssStyle = React.useMemo(() => {
