@@ -70,6 +70,8 @@ export const downloadFile = (content: string, fileName: string) => {
  * }
  */
 export const getThemeRules = (css: string): TThemeData | null => {
+  // FIXME: 值内换行导致的问题
+  // TODO: 添加主题备注名称
   const themeName = /data-theme="([^"]+)"/.exec(css)?.[1];
   if (!themeName) return null;
 

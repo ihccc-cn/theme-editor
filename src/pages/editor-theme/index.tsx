@@ -243,7 +243,7 @@ const Editor: FC<{}> = () => {
                   options={groupBy.options}
                   value={groupByType}
                   onChange={(type) => setGroupByType(type)}
-                  style={{ width: 140 }}
+                  style={{ width: 110 }}
                 />
               </React.Fragment>
             }
