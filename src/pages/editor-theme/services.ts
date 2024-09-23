@@ -46,6 +46,7 @@ export async function updateTheme(data: {
   desc: string;
   name: string;
   value: string | number;
+  remove?: boolean;
   id: string;
 }) {
   return request("/mock/theme/item/update", { method: "POST", data }).then(

@@ -34,8 +34,6 @@ const Editor: FC<{}> = () => {
   const [importType, setImportType] = React.useState<string>("JSON");
   const [exportType, setExportType] = React.useState<string>("JSON");
   const theme = useRemoteTheme();
-  // 当前主题变量数据
-  const themeItem = theme.children;
   const [groupByType, setGroupByType] = React.useState<string>(
     groupBy.defaultType
   );
@@ -55,7 +53,7 @@ const Editor: FC<{}> = () => {
       theme.add({
         name: `新主题-${themeId}`,
         key: `new-theme-${themeId}`,
-        list: themeItem.list,
+        list: theme.themeItems,
       });
     } else {
       theme.remove(themeKey as string);
@@ -64,23 +62,18 @@ const Editor: FC<{}> = () => {
 
   // 修改主题名称
   const handleThemeName = (e: React.FormEvent) => {
-    const key = getValue(e);
-    if (theme.findIndex(key) > -1) {
-      message.warning("主题名称重复！");
-      return;
-    }
-    theme.update({ key });
-  };
-
-  // 更改主题的分组
-  const hanleThemeGroup = (groupKey: string) => {
-    theme.update({ groupKey });
+    // const key = getValue(e);
+    // if (theme.findIndex(key) > -1) {
+    //   message.warning("主题名称重复！");
+    //   return;
+    // }
+    // theme.update({ key });
   };
 
   // 主题变量分组后数据
   const groupedData = React.useMemo(() => {
     const initData: TGroupedData = { defaultKey: "", group: [], list: {} };
-    return themeItem.list.reduce((store, item) => {
+    return theme.themeItems.reduce((store, item) => {
       const groupName = groupBy.actions[groupByType]?.(item);
       if (groupName) {
         if (!store.defaultKey) store.defaultKey = groupName;
@@ -92,30 +85,28 @@ const Editor: FC<{}> = () => {
       }
       return store;
     }, initData);
-  }, [groupByType, themeItem.list]);
+  }, [groupByType, theme.themeItems]);
 
   // 主题分组选中值
-  const groupTabKeyActive = theme.groupKey || groupedData.defaultKey;
+  const groupTabKeyActive = theme.group || groupedData.defaultKey;
 
   // 主题变量转换为 css (实时)
   const cssStyle = React.useMemo(() => {
     return buildCssStyle({
       name: theme.name,
       key: theme.active.key,
-      list: themeItem.list,
+      list: theme.themeItems,
     });
-  }, [theme.name, theme.active, themeItem.list]);
+  }, [theme.name, theme.active, theme.themeItems]);
 
   // 修改变量值
   const handleThemeItemChange = (value: any, item: any) => {
-    const index = themeItem.list.indexOf(item);
-    themeItem.replace(index, { ...item, value });
+    theme.updateItem({ ...item, value });
   };
 
   // 标记删除变量值
   const handleThemeItemRemove = (item: any) => {
-    const index = themeItem.list.indexOf(item);
-    themeItem.replace(index, { ...item, remove: !item.remove });
+    theme.updateItem({ ...item, remove: !item.remove });
   };
 
   // 导入操作
@@ -131,21 +122,7 @@ const Editor: FC<{}> = () => {
       message.error("导入数据格式错误！");
       return;
     }
-    const index = theme.findIndex(res.key);
-    // if(index ===  -1) {
-    //   // 添加一个临时的 tab
-    // }
-    // theme.setActive( res.key);
-    // // 更新当前主题
-    // themeItem.resetList(res.list);
-    // // 显示保存按钮
-    // 存在，更新主题，不存在新增主题
-    if (index > -1) {
-      theme.update(res);
-    } else {
-      theme.add(res);
-    }
-    themeItem.resetList(res.list);
+    theme.add(res);
     setVisible("import");
     message.success("导入成功！");
   };
@@ -158,8 +135,7 @@ const Editor: FC<{}> = () => {
         // 获取名称
         name: theme.name,
         key: theme.active.key,
-        list: themeItem.list.filter((item) => !!item.name && !item.remove),
-        ...(!theme.groupKey ? {} : { groupKey: theme.groupKey }),
+        list: theme.themeItems.filter((item) => !!item.name && !item.remove),
       },
       null,
       2
@@ -215,11 +191,11 @@ const Editor: FC<{}> = () => {
             }
             group={groupedData.group}
             tabKey={groupTabKeyActive}
-            onTabChange={hanleThemeGroup}
+            onTabChange={theme.setGroup}
             inputComponents={inputComponents}
             data={
               !groupTabKeyActive
-                ? themeItem.list
+                ? theme.themeItems
                 : groupedData.list[groupTabKeyActive] || []
             }
             onThemeChange={handleThemeItemChange}

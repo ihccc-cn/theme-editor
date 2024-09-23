@@ -13,23 +13,23 @@
   /* 状态色: 默认 */
   --color-status-default: #9e9e9e;
   /* 状态色: 默认次要 */
-  --color-status-default-secondary: #cfcfcf;
+  --color-status-default-secondary: #f5f5f5;
   /* 状态色: 进行中 */
   --color-status-processing: #2196f3;
   /* 状态色: 进行中次要 */
-  --color-status-processing-secondary: #2196f3;
+  --color-status-processing-secondary: #bbdefb;
   /* 状态色: 成功 */
   --color-status-success: #4caf50;
   /* 状态色: 成功次要 */
-  --color-status-success-secondary: #4caf50;
+  --color-status-success-secondary: #c8e6c9;
   /* 状态色: 警告 */
   --color-status-warning: #ff9800;
   /* 状态色: 警告次要 */
-  --color-status-warning-secondary: #ff9800;
+  --color-status-warning-secondary: #ffecb3;
   /* 状态色: 错误 */
   --color-status-error: #f44336;
   /* 状态色: 错误次要 */
-  --color-status-error-secondary: #f44336;
+  --color-status-error-secondary: #ffcdd2;
   /* 文字颜色 */
   --color-text: #f8fafc;
   /* 文字颜色: 次要 */
@@ -123,7 +123,7 @@
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 系统色调 */
-  color-scheme: light;
+  color-scheme: dark;
   /* 系统强调色 */
   accent-color: var(--color-primary);
 }

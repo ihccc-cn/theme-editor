@@ -126,15 +126,22 @@ export const useLocalTheme = () => {
 export const useRemoteTheme = () => {
   // 当前选择的主题
   const [active, setActive] = React.useState<TActiveTab>({ key: "", index: 0 });
-  const currentThemeRef = React.useRef<string>("");
+  const currentThemeRef = React.useRef<{
+    id: string;
+    name: string;
+    key: string;
+  }>({ id: "", name: "", key: "" });
+  const nextThemeRef = React.useRef<string>("");
   // 当前主题变量数据
-  const children = useDynamicList<TThemeRule>([]);
+  const [themeItems, setThemeItems] = React.useState<TThemeRule[]>([]);
+
+  const [group, setGroup] = React.useState<Record<string, string>>({});
 
   // 获取当前主题
   const themeItemCommand = useRequest(themeServices.queryTheme, {
     manual: true,
     onSuccess: (data) => {
-      children.resetList(data);
+      setThemeItems(data);
     },
   });
 
@@ -144,9 +151,9 @@ export const useRemoteTheme = () => {
       if (data.length === 0) return;
       let currentTheme = null;
 
-      if (currentThemeRef.current) {
+      if (nextThemeRef.current) {
         currentTheme = data.find(
-          (item: any) => item.key === currentThemeRef.current
+          (item: any) => item.key === nextThemeRef.current
         );
       } else {
         currentTheme = data[0];
@@ -157,8 +164,6 @@ export const useRemoteTheme = () => {
   });
 
   React.useEffect(() => {
-    console.log(active);
-
     if (active.id) themeItemCommand.run({ id: active.id });
   }, [active]);
 
@@ -181,15 +186,19 @@ export const useRemoteTheme = () => {
   //   // 将当前主题数据保存下来
   //   theme.replace(active.index, {
   //     ...theme.list[active.index],
-  //     list: children.list,
+  //     list: themeItems,
   //   });
   // };
 
   const setActiveTab = (key: string) => {
     const index = findIndex(key);
     const list = themesCommand.data || [];
-    const theme = list[index];
-    setActive({ key, index, id: theme.id });
+    currentThemeRef.current = list[index];
+    setActive({ key, index, id: currentThemeRef.current.id });
+  };
+
+  const setGroupTab = (groupKey: string) => {
+    setGroup((keys) => ({ ...keys, [active.key]: groupKey }));
   };
 
   // 新增主题
@@ -200,26 +209,24 @@ export const useRemoteTheme = () => {
     },
   });
   const add = (themeData: TThemeData) => {
-    currentThemeRef.current = themeData.key;
+    nextThemeRef.current = themeData.key;
     addCommand.run({
       name: themeData.name || themeData.key,
       key: themeData.key,
       list: themeData.list,
     });
   };
-  // const add = (themeData: TThemeData) => {
-  //   theme.push(themeData);
-  //   // 刷新操作
-  //   setActiveTab({ key: themeData.key, index: themeList.length });
-  // };
 
-  // // 修改
-  // const update = (themeData: Partial<TThemeData>) => {
-  //   const data = { ...theme.list[active.index], ...themeData };
-  //   theme.replace(active.index, data);
-  //   // 刷新操作
-  //   setActive({ ...active, key: data.key });
-  // };
+  // 修改
+  const updateCommand = useRequest(themeServices.update, {
+    manual: true,
+    onSuccess: () => {
+      themesCommand.refresh();
+    },
+  });
+  const update = (theme: { id?: string; name?: string; key?: string }) => {
+    updateCommand.run({ ...currentThemeRef.current, ...theme });
+  };
 
   // 删除
   const removeCommand = useRequest(themeServices.remove, {
@@ -231,25 +238,20 @@ export const useRemoteTheme = () => {
   const remove = (key: string) => {
     removeCommand.run({ key });
   };
-  // const remove = (key: string) => {
-  //   const index = findIndex(key);
 
-  //   theme.remove(index);
-  //   // 刷新操作
-  //   if (key === active.key) {
-  //     // 如果删除的选中的主题，是第一个，切换到下一个选项卡，否则，切换到上一个选项卡
-  //     const activeIndex = index === 0 ? index + 1 : index - 1;
-  //     setActiveTab({
-  //       key: theme.list[activeIndex].key,
-  //       index: activeIndex,
-  //     });
-  //   }
-  // };
-
-  // const { name, groupKey } = theme.list[active.index] || {};
+  // 修改变量
+  const updateItemCommand = useRequest(themeServices.updateTheme, {
+    manual: true,
+    onSuccess: () => {
+      themeItemCommand.refresh();
+    },
+  });
+  const updateItem = (theme: any) => {
+    updateItemCommand.run({ ...theme, key: active.key });
+  };
 
   return {
-    // name,
+    name: themeList[active.index]?.label,
     loading:
       themeItemCommand.loading ||
       themesCommand.loading ||
@@ -258,14 +260,14 @@ export const useRemoteTheme = () => {
       false,
     active,
     setActive: setActiveTab,
+    group: group[active.key],
+    setGroup: setGroupTab,
     themeList,
-    // groupKey,
-    children,
+    themeItems,
     findIndex,
     add,
     remove,
-    // update,
-    // save,
-    // getCurrentTheme,
+    update,
+    updateItem,
   };
 };

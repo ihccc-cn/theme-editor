@@ -93,7 +93,7 @@ export const getThemeRules = (css: string): TThemeData | null => {
     .split(";")
     .filter((i) => !!i);
 
-  for (let i = 0; i < lines.length; i += 2) {
+  for (let i = 0; i < lines.length; i += 1) {
     const cssLine = lines[i];
     const info = regExp.cssLine.exec(cssLine) || [];
 
@@ -101,10 +101,10 @@ export const getThemeRules = (css: string): TThemeData | null => {
 
     const theme: TThemeRule = {
       type: "input",
-      label: info[2] || info[4],
-      desc: info[3],
+      label: info[2] || info[4] || info[5],
+      desc: info[3] || "",
       name: info[5],
-      value: info[6],
+      value: info[6] || "",
     };
 
     if (/^(\#|rgb|hsb)/.test(theme.value)) {
