@@ -17,7 +17,9 @@ export type TThemeRule = {
 
 export type TThemeData = {
   /** 主题名称 */
-  themeName: string;
+  name?: string;
+  /** 主题键值 */
+  key: string;
   /** 变量列表 */
   list: TThemeRule[];
   /** 当前分组选项卡 */
@@ -25,7 +27,10 @@ export type TThemeData = {
 };
 
 export type TGroupedData = {
+  /** 默认选中分组 */
   defaultKey: string;
+  /** 分组列表 */
   group: { label: string; key: string }[];
+  /** 分组数据 */
   list: Record<string, any>;
 };

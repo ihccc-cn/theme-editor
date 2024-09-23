@@ -17,3 +17,7 @@ export function rootContainer(container: any) {
     container
   );
 }
+
+export const request = {
+  timeout: 3000,
+};

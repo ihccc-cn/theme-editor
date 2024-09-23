@@ -12,9 +12,11 @@ export const getValue = (e: any, type?: string) => {
 
 /** 分组规则 */
 export const groupBy: {
+  defaultType: string;
   options: { label: string; value: string }[];
   actions: Record<string, (theme: TThemeRule) => string>;
 } = {
+  defaultType: "byName",
   options: [
     { label: "不显示分组", value: "none" },
     { label: "按类型分组", value: "byType" },
@@ -60,47 +62,51 @@ export const downloadFile = (content: string, fileName: string) => {
   saveAs(blob, fileName);
 };
 
+const regExp = {
+  css: /\/\*(\s+|\s*)?(\W+)\s+?\*\/\s+\[data-theme=("|')(.+)("|')\].?\{\s+?(\/(\s|.)+)\}/,
+  cssLine: /(\/\*(\W+):+?(\W+)\*\/|\/\*(\W+)\*\/)([-A-z]+):(.+)/,
+};
+
 /**
  * 将css 变量转换为 json 数据
  * @example
  * 参数格式必须为，注释可省略，如果省略了必须在两个变量中间空一行
+ * /-* 主题名称 *-/
  * [data-theme="xxxx"]{
  *  /-* 变量名称: 变量描述 *-/
  *  --xxx: xxxx;
  * }
  */
 export const getThemeRules = (css: string): TThemeData | null => {
-  // FIXME: 值内换行导致的问题
-  // TODO: 添加主题备注名称
-  const themeName = /data-theme="([^"]+)"/.exec(css)?.[1];
-  if (!themeName) return null;
+  const cssData = regExp.css.exec(css) || [];
 
-  const lines = css.split("\n");
-  const list: TThemeRule[] = [];
+  if (!cssData[4]) return null;
 
-  const start = /data-theme/.test(lines[0]) ? 1 : 0;
+  const themeData: TThemeData = {
+    name: cssData[2],
+    key: cssData[4],
+    list: [],
+  };
 
-  for (let i = start; i < lines.length; i += 2) {
-    const noteLine = lines[i];
-    const cssLine = lines[i + 1];
-    if (!cssLine) continue;
+  const lines = cssData[6]
+    .replace(/(\r|\n|\s)/g, "")
+    .split(";")
+    .filter((i) => !!i);
+
+  for (let i = 0; i < lines.length; i += 2) {
+    const cssLine = lines[i];
+    const info = regExp.cssLine.exec(cssLine) || [];
+
+    if (!info[5]) continue;
+
     const theme: TThemeRule = {
       type: "input",
-      label: "",
-      desc: "",
-      name: "",
-      value: null,
+      label: info[2] || info[4],
+      desc: info[3],
+      name: info[5],
+      value: info[6],
     };
-    // theme.name = cssLine.match(/--((\w|-)+)/)?.[1] || "";
-    theme.name = (cssLine.match(/(.+?):/)?.[1] || "").replace(/\s+/g, "");
-    if (!theme.name) continue;
-    theme.value = cssLine.match(/:\s*(.+);/)?.[1] || "";
-    const note = noteLine.match(/\/\*\s*(.+)\*\//)?.[1];
-    if (!!note) {
-      const [label, desc] = note.split(/:|：/);
-      theme.label = (label || "").trim();
-      theme.desc = (desc || "").trim();
-    }
+
     if (/^(\#|rgb|hsb)/.test(theme.value)) {
       theme.type = "color";
     } else if (/^\d+(px|em|rem|vw|vh|vmin|vmax)$/.test(theme.value)) {
@@ -108,15 +114,15 @@ export const getThemeRules = (css: string): TThemeData | null => {
     } else if (/^\d+$/.test(theme.value)) {
       theme.type = "number";
     }
-    list.push(theme);
+    themeData.list.push(theme);
   }
 
-  return { themeName, list };
+  return themeData;
 };
 
 /** 创建css样式 */
 export const buildCssStyle = (themeData: TThemeData) => {
-  const { themeName, list } = themeData;
+  const { name, key, list } = themeData;
   const css = list
     .filter((item) => !!item.name && !item.remove)
     .map((item) => {
@@ -128,9 +134,52 @@ export const buildCssStyle = (themeData: TThemeData) => {
       }
       const cssRule = `  ${item.name}: ${item.value};`;
       return [note, cssRule].join("\n");
-    });
+    })
+    .join("\n");
   // return `@import url(/editor-theme/ant.var.css);
-  return `[data-theme="${themeName}"]{
-${css.join("\n")}
+  return `/* ${name || key} */
+[data-theme="${key}"]{
+${css}
 }`;
+};
+
+/** 切换主题 */
+export const changeTheme = (theme: string) => {
+  document.documentElement.setAttribute("data-theme", theme);
+};
+
+/** 动画切换主题 */
+export const changeThemeTransitional = async (
+  theme: string,
+  event?: MouseEvent
+) => {
+  // changeTheme(theme);
+  // return;
+  // @ts-ignore 在不支持的浏览器里不做动画
+  if (!document.startViewTransition) {
+    changeTheme(theme);
+    return;
+  }
+  // @ts-ignore 开始一次视图过渡：
+  const transition = document.startViewTransition(() => changeTheme(theme));
+
+  await transition.ready;
+
+  const x = !event ? window.innerWidth / 2 : event.clientX;
+  const y = !event ? window.innerHeight / 2 : event.clientY;
+  //计算按钮到最远点的距离用作裁剪圆形的半径
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
+  );
+  const keyframes = [
+    { clipPath: `circle(0px at ${x}px ${y}px)` },
+    { clipPath: `circle(${endRadius}px at ${x}px ${y}px)` },
+  ];
+  //开始动画
+  document.documentElement.animate(keyframes, {
+    duration: 800,
+    easing: "ease",
+    pseudoElement: "::view-transition-new(root)",
+  });
 };

@@ -1,5 +1,6 @@
 export default {
-  themeName: "defaultLight",
+  name: "默认浅色",
+  key: "defaultLight",
   list: [
     {
       type: "color",
@@ -307,8 +308,7 @@ export default {
       label: "背景图",
       desc: "登录页",
       name: "--image-bg-layout-login",
-      value:
-        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cpolygon fill='%239bc2d8' points='957 450 539 900 1396 900'/%3E%3Cpolygon fill='%235a6685' points='957 450 872.9 900 1396 900'/%3E%3Cpolygon fill='%2385abd6' points='-60 900 398 662 816 900'/%3E%3Cpolygon fill='%235f7295' points='337 900 398 662 816 900'/%3E%3Cpolygon fill='%237193d8' points='1203 546 1552 900 876 900'/%3E%3Cpolygon fill='%238a9ab5' points='1203 546 1552 900 1162 900'/%3E%3Cpolygon fill='%236c80d9' points='641 695 886 900 367 900'/%3E%3Cpolygon fill='%238ea4c1' points='587 900 641 695 886 900'/%3E%3Cpolygon fill='%236b74e8' points='1710 900 1401 632 1096 900'/%3E%3Cpolygon fill='%237b98ba' points='1710 900 1401 632 1365 900'/%3E%3Cpolygon fill='%237f7cf6' points='1210 900 971 687 725 900'/%3E%3Cpolygon fill='%239dbad9' points='943 900 1210 900 971 687'/%3E%3C/svg%3E\")",
+      value: "unset",
     },
     {
       type: "input",

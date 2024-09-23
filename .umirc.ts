@@ -7,6 +7,7 @@ export default defineConfig({
   title: "主题编辑",
   links: [{ href: "/editor-theme/default-light.css" }],
   routes: [{ path: "/", component: "index" }],
-  npmClient: "pnpm",
+  request: {},
+  fastRefresh: true,
   mfsu: false,
 });
