@@ -361,6 +361,7 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   };
 
   return {
+    infos: `主题 ${tabs.length} | 变量 ${currentThemeCommand.data?.list?.length || 0}`,
     /** 当前主题数据 */
     current: currentThemeCommand.data || {},
     /** 当前主题配置数据 */

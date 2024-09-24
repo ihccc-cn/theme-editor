@@ -49,7 +49,7 @@ export default {
       label: "状态色",
       desc: "默认次要",
       name: "--color-status-default-secondary",
-      value: "#cfcfcf",
+      value: "#f5f5f5",
     },
     {
       type: "color",
@@ -63,7 +63,7 @@ export default {
       label: "状态色",
       desc: "进行中次要",
       name: "--color-status-processing-secondary",
-      value: "#2196f3",
+      value: "#bbdefb",
     },
     {
       type: "color",
@@ -77,7 +77,8 @@ export default {
       label: "状态色",
       desc: "成功次要",
       name: "--color-status-success-secondary",
-      value: "#4caf50",
+      value: "#e2f4e3",
+      _changed: true,
     },
     {
       type: "color",
@@ -91,7 +92,7 @@ export default {
       label: "状态色",
       desc: "警告次要",
       name: "--color-status-warning-secondary",
-      value: "#ff9800",
+      value: "#ffecb3",
     },
     {
       type: "color",
@@ -105,7 +106,7 @@ export default {
       label: "状态色",
       desc: "错误次要",
       name: "--color-status-error-secondary",
-      value: "#f44336",
+      value: "#ffcdd2",
     },
     {
       type: "color",
@@ -252,14 +253,14 @@ export default {
       label: "背景色，遮罩",
       desc: "",
       name: "--color-bg-mask",
-      value: "rgba(0, 0, 0, 0.3)",
+      value: "rgba(0,0,0,0.3)",
     },
     {
       type: "color",
       label: "背景色，模糊背景",
       desc: "",
       name: "--color-bg-blur",
-      value: "rgba(55, 65, 81, 0.1)",
+      value: "rgba(55,65,81,0.1)",
     },
     {
       type: "color",
@@ -402,26 +403,12 @@ export default {
       value: "1400px",
     },
     {
-      type: "number",
-      label: "布局顶栏 zIndex",
-      desc: "",
-      name: "--z-index-header",
-      value: "200",
-    },
-    {
-      type: "number",
-      label: "侧边栏 zIndex",
-      desc: "",
-      name: "--z-index-side",
-      value: "190",
-    },
-    {
       type: "input",
       label: "字体",
       desc: "",
       name: "font-family",
       value:
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        '-apple-system,BlinkMacSystemFont,"SegoeUI",Roboto,"HelveticaNeue",Arial,"NotoSans",sans-serif,"AppleColorEmoji","SegoeUIEmoji","SegoeUISymbol","NotoColorEmoji"',
     },
     {
       type: "input",

@@ -48,11 +48,11 @@ export const groupBy: {
       ];
     },
     byName: (theme: TThemeRule) => {
+      if (/-layout/.test(theme.name) || /--z/.test(theme.name)) return "布局";
+      if (/-border/.test(theme.name)) return "边框";
       if (/--color-text/.test(theme.name)) return "文本颜色";
       if (/--color-bg/.test(theme.name)) return "背景";
-      if (/-border/.test(theme.name)) return "边框";
       if (/--color-/.test(theme.name)) return "颜色";
-      if (/-layout/.test(theme.name) || /--z/.test(theme.name)) return "布局";
       if (/--size-/.test(theme.name)) return "尺寸";
       return "其它";
     },

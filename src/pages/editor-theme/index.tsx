@@ -195,6 +195,12 @@ const Editor: FC<{}> = () => {
     <React.Fragment>
       <style scoped>{`${cssStyle}`}</style>
       <Layout
+        footer={
+          <React.Fragment>
+            <div className="we-system-analysis">{theme.infos}</div>
+            {/* <div className="we-system-message">系统消息</div> */}
+          </React.Fragment>
+        }
         tool={
           <ToolButton
             shouldUpdate={theme.shouldUpdate}
@@ -228,7 +234,7 @@ const Editor: FC<{}> = () => {
             {theme.tabs.length === 0 ? (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="点击导入添加主题，您也可以点击下面按钮，查看导入示例"
+                description="点击右上方导入按钮添加主题，也可以点击下面按钮，查看导入示例"
               >
                 <Button
                   type="primary"
@@ -245,6 +251,7 @@ const Editor: FC<{}> = () => {
               <EditorForm
                 extra={
                   <Input
+                    disabled
                     addonBefore="主题名称"
                     value={theme.active.key}
                     onChange={handleThemeName}

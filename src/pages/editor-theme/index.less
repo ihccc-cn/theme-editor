@@ -23,12 +23,15 @@ body {
   }
 
   &-layout-header {
+    display: flex;
+    align-items: center;
+    height: var(--size-layout-header-height, 52px);
     background-image: var(--image-bg-layout-header);
     // TODO: 添加变量 --bg-layout-header 复合属性
     background-size: 100% 100%;
     padding-inline: var(--size-cell-gap, 16px);
-    padding-block: var(--size-cell-gap, 16px);
     border-bottom: 1px solid var(--color-border, #d9d9d9);
+    box-sizing: border-box;
   }
 
   &-layout-body {
@@ -41,10 +44,22 @@ body {
     transition: 0.2s ease-in-out;
   }
 
+  &-layout-footer {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: var(--size-cell-gap, 16px);
+    padding-left: 80px;
+    border-top: 1px solid var(--color-border, #393939);
+    box-sizing: border-box;
+    font-size: 14px;
+    color: var(--color-text-secondary, #848484);
+  }
+
   &-layout-side-content {
     position: fixed;
-    top: 80px;
-    bottom: var(--size-cell-gap, 16px);
+    top: var(--size-layout-header-height, 52px);
+    bottom: calc(var(--size-cell-gap, 16px) + 32px);
     left: -100%;
     z-index: 99;
     transition: 0.2s ease-in-out;
@@ -54,6 +69,7 @@ body {
     }
 
     .ant-tabs-nav {
+      padding-block: var(--size-cell-gap, 16px);
       border-right: 1px solid var(--color-border, #d9d9d9);
 
       .ant-tabs-nav-add {
@@ -93,7 +109,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--size-cell-gap, 16px);
-    height: calc(100vh - 97px);
+    height: calc(100vh - 116px);
     overflow: auto;
   }
 
@@ -107,6 +123,7 @@ body {
 
   // 首部栏
   &-head-bar {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -147,7 +164,7 @@ body {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      height: calc(100vh - 167px);
+      height: calc(100vh - 186px);
       padding-top: var(--size-cell-gap-sm, 8px);
       padding-right: var(--size-cell-gap-sm, 8px);
       box-sizing: border-box;
@@ -234,5 +251,18 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--size-cell-gap, 16px);
+  }
+
+  &-system-analysis {
+    font-size: 12px;
+  }
+
+  &-system-message {
+    padding: 2px 6px;
+    // background: var(--color-status-success-secondary, #e2f4e3);
+    // color: var(--color-status-success, #4caf50);
+    // border: 1px solid var(--color-status-success, #4caf50);
+    border-radius: var(--size-border-radius-sm, 4px);
+    box-sizing: border-box;
   }
 }

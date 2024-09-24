@@ -4,12 +4,13 @@ import { Button } from "antd";
 import { THEME_HIDE_IMPORT_BUTTON, THEME_HIDE_EXPORT_BUTTON } from "./constant";
 
 // 布局
-const Layout: FC<{ tool: any; side?: any; editor?: any; view?: any }> = ({
-  tool,
-  side,
-  editor,
-  view,
-}) => {
+const Layout: FC<{
+  tool: any;
+  side?: any;
+  editor?: any;
+  view?: any;
+  footer?: any;
+}> = ({ tool, side, editor, view, footer }) => {
   return (
     <div className="we-layout we-layout-open-side">
       <div className="we-layout-header">{tool}</div>
@@ -18,6 +19,7 @@ const Layout: FC<{ tool: any; side?: any; editor?: any; view?: any }> = ({
         <div className="we-layout-editor-content">{editor}</div>
         <div className="we-layout-view-content">{view}</div>
       </div>
+      <div className="we-layout-footer">{footer}</div>
     </div>
   );
 };
