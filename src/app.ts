@@ -4,6 +4,11 @@ import zhCN from "antd/locale/zh_CN";
 import "./ant.var.css";
 
 window.onload = () => {
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "/editor-theme/default-light.css";
+  document.head.appendChild(link);
+
   document.documentElement.setAttribute("data-theme", "defaultLight");
 };
 

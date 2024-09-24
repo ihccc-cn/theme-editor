@@ -10,6 +10,25 @@ export const getValue = (e: any, type?: string) => {
   return !e.target ? e : e.target.value;
 };
 
+/** 读取缓存 */
+export const getStorage = (key: string, defaultData: any) => {
+  try {
+    return JSON.parse(window.localStorage.getItem(key) || "");
+  } catch (error) {
+    return defaultData;
+  }
+};
+
+/** 设置缓存 */
+export const setStorage = (key: string, data: any) => {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(data));
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 /** 分组规则 */
 export const groupBy: {
   defaultType: string;
@@ -121,19 +140,28 @@ export const getThemeRules = (css: string): TThemeData | null => {
 };
 
 /** 创建css样式 */
-export const buildCssStyle = (themeData: TThemeData) => {
+export const buildCssStyle = (
+  themeData: TThemeData,
+  config?: { filterRemove?: boolean; noteInfo?: boolean }
+) => {
   const { name, key, list } = themeData;
+  if (!key) return "";
   const css = list
-    .filter((item) => !!item.name && !item.remove)
+    .filter((item) => {
+      if (!item.name) return false;
+      if (config?.filterRemove && item.remove) return false;
+      return true;
+    })
     .map((item) => {
+      const cssLine = `  ${item.name}: ${item.value};`;
+      if (!config?.noteInfo) return cssLine;
       let note = "";
       if (!!item.label) {
         note += "  /* " + item.label;
         if (!!item.desc) note += "：" + item.desc;
         note += " */";
       }
-      const cssRule = `  ${item.name}: ${item.value};`;
-      return [note, cssRule].join("\n");
+      return [note, cssLine].join("\n");
     })
     .join("\n");
   // return `@import url(/editor-theme/ant.var.css);
@@ -178,7 +206,7 @@ export const changeThemeTransitional = async (
   ];
   //开始动画
   document.documentElement.animate(keyframes, {
-    duration: 800,
+    duration: 500,
     easing: "ease",
     pseudoElement: "::view-transition-new(root)",
   });

@@ -17,18 +17,23 @@ body {
 
   // 布局
   &-layout {
-    padding-inline: var(--size-cell-gap, 16px);
     background: var(--color-bg, #f5f5f5);
     height: 100vh;
     font-family: 黑体;
   }
 
   &-layout-header {
+    background-image: var(--image-bg-layout-header);
+    // TODO: 添加变量 --bg-layout-header 复合属性
+    background-size: 100% 100%;
+    padding-inline: var(--size-cell-gap, 16px);
     padding-block: var(--size-cell-gap, 16px);
     border-bottom: 1px solid var(--color-border, #d9d9d9);
   }
 
   &-layout-body {
+    background-image: var(--image-bg-layout-body);
+    padding-inline: var(--size-cell-gap, 16px);
     padding-block: var(--size-cell-gap, 16px);
     box-sizing: border-box;
     display: flex;
@@ -93,7 +98,7 @@ body {
   }
 
   &-layout-open-side &-layout-body {
-    padding-left: 60px;
+    padding-left: 72px;
   }
 
   &-layout-open-side &-layout-side-content {

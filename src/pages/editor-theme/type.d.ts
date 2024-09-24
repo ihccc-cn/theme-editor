@@ -16,6 +16,7 @@ export type TThemeRule = {
 };
 
 export type TThemeData = {
+  id?: string;
   /** 主题名称 */
   name?: string;
   /** 主题键值 */

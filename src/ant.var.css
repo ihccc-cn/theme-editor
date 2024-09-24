@@ -1,7 +1,7 @@
-#root .css-var-r0 {
+body .css-var-r0 {
   --ant-color-primary: var(--color-primary);
   --ant-color-primary-hover: var(--color-primary-hover);
-  --ant-color-bg-container: var(--color-bg-component);
+  --ant-color-bg-container: var(--color-bg-secondary);
   --ant-color-bg-elevated: var(--color-bg-popover);
   --ant-color-border: var(--color-border);
   --ant-input-hover-border-color: var(--color-primary);
@@ -20,17 +20,20 @@
   --ant-color-split: var(--color-border-secondary);
 }
 
-#root .css-var-r0.ant-modal-css-var {
+/* modal */
+body .css-var-r0.ant-modal-css-var {
   --ant-modal-header-bg: var(--color-bg-component);
   --ant-modal-content-bg: var(--color-bg-component);
   --ant-modal-title-color: var(--color-text);
 }
 
-#root .css-var-r0.ant-card {
+/* card */
+body .css-var-r0.ant-card {
   --ant-card-actions-bg: var(--color-bg);
 }
 
-#root .css-var-r0.ant-table {
+/* table */
+body .css-var-r0.ant-table {
   --ant-table-header-bg: var(--color-bg);
   --ant-table-header-color: var(--color-text);
   --ant-table-header-split-color: var(--color-border);
@@ -40,14 +43,14 @@
   --ant-table-expand-icon-bg: var(--color-bg);
 }
 
-#root .css-var-r0.ant-breadcrumb {
+body .css-var-r0.ant-breadcrumb {
   --ant-breadcrumb-item-color: var(--color-text);
   --ant-breadcrumb-last-item-color: var(--color-text);
   --ant-breadcrumb-link-color: var(--color-text);
   --ant-breadcrumb-separator-color: var(--color-text-desc);
 }
 
-#root .css-var-r0.ant-tabs-css-var {
+body .css-var-r0.ant-tabs-css-var {
   --ant-tabs-item-color: var(--color-text);
   --ant-tabs-item-selected-color: var(--color-primary);
   --ant-tabs-ink-bar-color: var(--color-primary);
@@ -55,32 +58,36 @@
   --ant-tabs-item-active-color: var(--color-primary);
 }
 
-#root .css-var-r0.ant-picker-calendar {
+body .css-var-r0.ant-picker-calendar {
   --ant-calendar-full-bg: var(--color-bg-component);
   --ant-calendar-full-panel-bg: var(--color-bg-component);
 }
 
-#root .css-var-r0.ant-select-css-var {
+body .css-var-r0.ant-select-css-var {
   --ant-select-selector-bg: var(--color-bg);
+  --ant-select-option-selected-bg: var(--color-bg-component-active);
+  --ant-select-option-selected-color: var(--color-text);
 }
 
-#root .css-var-r0.ant-radio-css-var {
+body .css-var-r0.ant-radio-css-var {
   --ant-radio-button-bg: var(--color-bg-component);
   --ant-radio-button-checked-bg: var(--color-bg-component);
   --ant-radio-button-color: var(--color-text);
 }
 
-#root .css-var-r0.ant-form-css-var {
+body .css-var-r0.ant-form-css-var {
   --ant-form-label-color: var(--color-text);
 }
 
-#root .css-var-r0.ant-input-css-var {
+/* input */
+body .css-var-r0.ant-input-css-var {
   --ant-input-active-bg: var(--color-bg-component);
   --ant-input-hover-bg: var(--color-bg-component-hover);
-  --ant-input-active-border-color: var(--color-primary);
+  --ant-input-hover-border-color: var(--color-border-hover);
+  --ant-input-active-border-color: var(--color-border-active);
 }
 
-#root .css-var-r0.ant-btn {
+body .css-var-r0.ant-btn {
   --ant-button-default-bg: var(--color-bg-component);
   --ant-button-default-hover-bg: var(--color-bg-component-hover);
   --ant-button-default-active-bg: var(--color-bg-component-hover);
@@ -94,13 +101,26 @@
   --ant-button-default-active-color: var(--color-primary-active);
 }
 
-#root .css-var-r0.ant-pagination {
+body .css-var-r0.ant-pagination {
   --ant-pagination-item-bg: var(--color-bg-component);
   --ant-pagination-item-active-bg: var(--color-bg-component);
   --ant-pagination-hover-bg: var(--color-bg-component-hover);
   --ant-pagination-active-bg: var(--color-bg-component-hover);
 }
 
-#root .css-var-r0.ant-switch {
+body .css-var-r0.ant-switch {
   --ant-switch-handle-bg: var(--color-bg-component-hover);
+}
+
+body .css-var-r0.ant-segmented {
+  --ant-segmented-track-bg: var(--color-bg-secondary);
+  --ant-segmented-item-selected-bg: var(--color-bg-component);
+  --ant-segmented-item-color: var(--color-text);
+  --ant-segmented-item-selected-color: var(--color-text);
+  --ant-segmented-item-hover-color: var(--color-text-hover);
+}
+
+/** select */
+.ant-select-dropdown {
+  backdrop-filter: blur(8px);
 }

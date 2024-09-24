@@ -39,7 +39,7 @@
 
 ## 页面截图
 
-![Page Screenshot](/public/screenshot.png)
+![Page Screenshot](/screenshot.png)
 
 
 ## License

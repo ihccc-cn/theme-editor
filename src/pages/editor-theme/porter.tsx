@@ -9,11 +9,12 @@ import { copySuccess, getValue, readFile } from "./utils";
 const importOptions = ["JSON", "CSS"];
 export const Importer: FC<{
   type?: string;
+  value: string;
+  onChange: (input: string) => any;
   onConfirm?: (input: string) => any;
   onCancel?: () => any;
   onTypeChange?: (value: string) => any;
-}> = ({ type, onConfirm, onCancel, onTypeChange }) => {
-  const [input, setInput] = React.useState<string>("");
+}> = ({ type, value, onChange, onConfirm, onCancel, onTypeChange }) => {
   return (
     <div className="we-importer">
       <HeadBar
@@ -28,15 +29,15 @@ export const Importer: FC<{
       />
       <Input.TextArea
         rows={12}
-        value={input}
-        onChange={(e: React.FormEvent) => setInput(getValue(e))}
+        value={value}
+        onChange={(e: React.FormEvent) => onChange(getValue(e))}
         style={{ fontSize: 12 }}
       />
       <div className="we-btn-group">
         <Button
           onClick={() => {
             onCancel?.();
-            // setInput("");
+            onChange("");
           }}
         >
           关闭
@@ -45,7 +46,7 @@ export const Importer: FC<{
           accept={{ JSON: ".json", CSS: ".css" }[type || "JSON"]}
           fileList={[]}
           beforeUpload={(file: File) => {
-            readFile(file, (content: string) => setInput(content));
+            readFile(file, (content: string) => onChange(content));
             return false;
           }}
         >
@@ -53,10 +54,10 @@ export const Importer: FC<{
         </Upload>
         <Button
           type="primary"
-          disabled={!input}
+          disabled={!value}
           onClick={() => {
-            onConfirm?.(input);
-            // setInput("");
+            onConfirm?.(value);
+            onChange("");
           }}
         >
           确认

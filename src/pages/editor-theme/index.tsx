@@ -1,20 +1,39 @@
 import React, { FC } from "react";
-import { Tabs, Select, ColorPicker, InputNumber, Input, message } from "antd";
+import {
+  Tabs,
+  ColorPicker,
+  InputNumber,
+  Input,
+  Button,
+  Spin,
+  Empty,
+  message,
+} from "antd";
 import Layout, { ToolButton } from "./layout";
 import SliderWithUnit from "./slider-with-unit";
 import EditorForm from "./editor-form";
 import Previewer from "./previewer";
 import { Importer, Exporter } from "./porter";
+import Setting from "./setting";
 // import { useVisible, useLocalTheme } from "./hooks";
 import { useVisible, useRemoteTheme } from "./hooks";
 import {
-  getValue,
+  THEME_CACHE_KEY,
+  THEME_DEFAULT_SERVER,
+  THEME_HIDE_ADD_BUTTON,
+} from "./constant";
+import {
+  // getValue,
   groupBy,
   downloadFile,
   getThemeRules,
   buildCssStyle,
-  changeTheme,
+  // changeTheme,
+  changeThemeTransitional,
+  getStorage,
+  setStorage,
 } from "./utils";
+import defaultTheme from "./default-theme";
 import { TThemeData, TGroupedData } from "./type";
 import "./index.less";
 
@@ -25,21 +44,32 @@ const inputComponents = {
   input: <Input />,
 };
 
+const DEFAULT_SETTING = {
+  server: THEME_DEFAULT_SERVER,
+  groupByType: groupBy.defaultType,
+};
+
 let __UID__ = 1;
 // 编辑器
 const Editor: FC<{}> = () => {
+  // 用户设置
+  const [themeSetting, setThemeSetting] = React.useState<Record<string, any>>(
+    getStorage(THEME_CACHE_KEY, DEFAULT_SETTING)
+  );
   // 面板显示状态
-  const [visible, setVisible] = useVisible({ import: false, export: false });
+  const [visible, setVisible] = useVisible({
+    import: false,
+    export: false,
+    setting: themeSetting === DEFAULT_SETTING,
+  });
   // 导入导出格式
   const [importType, setImportType] = React.useState<string>("JSON");
+  const [importContent, setImportContetn] = React.useState<string>("");
   const [exportType, setExportType] = React.useState<string>("JSON");
-  const theme = useRemoteTheme();
-  const [groupByType, setGroupByType] = React.useState<string>(
-    groupBy.defaultType
-  );
+  const theme = useRemoteTheme({ server: themeSetting.server });
 
   React.useEffect(() => {
-    changeTheme(theme.active.key);
+    if (theme.active.key) changeThemeTransitional(theme.active.key);
   }, [theme.active]);
 
   // 主题新增删除
@@ -53,7 +83,7 @@ const Editor: FC<{}> = () => {
       theme.add({
         name: `新主题-${themeId}`,
         key: `new-theme-${themeId}`,
-        list: theme.themeItems,
+        list: theme.list,
       });
     } else {
       theme.remove(themeKey as string);
@@ -73,8 +103,8 @@ const Editor: FC<{}> = () => {
   // 主题变量分组后数据
   const groupedData = React.useMemo(() => {
     const initData: TGroupedData = { defaultKey: "", group: [], list: {} };
-    return theme.themeItems.reduce((store, item) => {
-      const groupName = groupBy.actions[groupByType]?.(item);
+    return theme.list.reduce((store, item) => {
+      const groupName = groupBy.actions[themeSetting.groupByType]?.(item);
       if (groupName) {
         if (!store.defaultKey) store.defaultKey = groupName;
         if (!store.list[groupName]) {
@@ -85,7 +115,7 @@ const Editor: FC<{}> = () => {
       }
       return store;
     }, initData);
-  }, [groupByType, theme.themeItems]);
+  }, [themeSetting.groupByType, theme.list]);
 
   // 主题分组选中值
   const groupTabKeyActive = theme.group || groupedData.defaultKey;
@@ -93,11 +123,11 @@ const Editor: FC<{}> = () => {
   // 主题变量转换为 css (实时)
   const cssStyle = React.useMemo(() => {
     return buildCssStyle({
-      name: theme.name,
-      key: theme.active.key,
-      list: theme.themeItems,
+      name: theme.current.name,
+      key: theme.current.key,
+      list: theme.list,
     });
-  }, [theme.name, theme.active, theme.themeItems]);
+  }, [theme.current, theme.list]);
 
   // 修改变量值
   const handleThemeItemChange = (value: any, item: any) => {
@@ -129,13 +159,25 @@ const Editor: FC<{}> = () => {
 
   // 输出操作
   const handleOutput = () => {
-    if (exportType === "CSS") return cssStyle;
+    if (exportType === "CSS") {
+      return buildCssStyle(
+        {
+          name: theme.current.name,
+          key: theme.current.key,
+          list: theme.list,
+        },
+        {
+          filterRemove: true,
+          noteInfo: true,
+        }
+      );
+    }
     return JSON.stringify(
       {
         // 获取名称
-        name: theme.name,
-        key: theme.active.key,
-        list: theme.themeItems.filter((item) => !!item.name && !item.remove),
+        name: theme.current.name,
+        key: theme.current.key,
+        list: theme.list.filter((item) => !!item.name && !item.remove),
       },
       null,
       2
@@ -155,58 +197,102 @@ const Editor: FC<{}> = () => {
       <Layout
         tool={
           <ToolButton
-            active={{ import: visible.import, export: visible.export }}
+            shouldUpdate={theme.shouldUpdate}
+            active={{
+              import: visible.import,
+              export: visible.export,
+              setting: visible.setting,
+            }}
+            onUpdate={theme.refresh}
             onImport={() => setVisible("import")}
             onExport={() => setVisible("export")}
+            onSetting={() => setVisible("setting")}
           />
         }
         side={
-          <Tabs
-            size="small"
-            tabPosition="left"
-            type="editable-card"
-            items={theme.themeList}
-            activeKey={theme.active.key}
-            onChange={theme.setActive}
-            onEdit={handleThemeEdit}
-          />
+          theme.tabs.length > 0 && (
+            <Tabs
+              size="small"
+              tabPosition="left"
+              type="editable-card"
+              items={theme.tabs}
+              activeKey={theme.active.key}
+              onChange={theme.setActive}
+              onEdit={handleThemeEdit}
+              hideAdd={THEME_HIDE_ADD_BUTTON}
+            />
+          )
         }
         editor={
-          <EditorForm
-            extra={
-              <React.Fragment>
-                <Input
-                  addonBefore="主题名称"
-                  value={theme.active.key}
-                  onChange={handleThemeName}
-                />
-                <Select
-                  variant="borderless"
-                  options={groupBy.options}
-                  value={groupByType}
-                  onChange={setGroupByType}
-                  style={{ width: 110 }}
-                />
-              </React.Fragment>
-            }
-            group={groupedData.group}
-            tabKey={groupTabKeyActive}
-            onTabChange={theme.setGroup}
-            inputComponents={inputComponents}
-            data={
-              !groupTabKeyActive
-                ? theme.themeItems
-                : groupedData.list[groupTabKeyActive] || []
-            }
-            onThemeChange={handleThemeItemChange}
-            onThemeRemove={handleThemeItemRemove}
-          />
+          <Spin spinning={theme.loading}>
+            {theme.tabs.length === 0 ? (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="点击导入添加主题，您也可以点击下面按钮，查看导入示例"
+              >
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setVisible("import");
+                    setImportContetn(JSON.stringify(defaultTheme, null, 2));
+                  }}
+                >
+                  添加案例
+                </Button>
+                <div style={{ marginTop: 12 }}>随后点击确定完成主题添加</div>
+              </Empty>
+            ) : (
+              <EditorForm
+                extra={
+                  <Input
+                    addonBefore="主题名称"
+                    value={theme.active.key}
+                    onChange={handleThemeName}
+                  />
+                }
+                headTool={
+                  theme.saveBtnVisible && (
+                    <React.Fragment>
+                      <Button size="small" type="primary" onClick={theme.save}>
+                        保存
+                      </Button>
+                      <Button size="small" onClick={theme.cancel}>
+                        取消
+                      </Button>
+                    </React.Fragment>
+                  )
+                }
+                group={groupedData.group}
+                tabKey={groupTabKeyActive}
+                onTabChange={theme.setGroup}
+                inputComponents={inputComponents}
+                data={groupedData.list[groupTabKeyActive] || theme.list}
+                onThemeChange={handleThemeItemChange}
+                onThemeRemove={handleThemeItemRemove}
+              />
+            )}
+          </Spin>
         }
         view={
           <React.Fragment>
+            {visible.setting && (
+              <Setting
+                value={themeSetting}
+                onChange={(key, value) =>
+                  setThemeSetting((data) => {
+                    const setting = { ...data, [key]: value };
+                    setStorage(THEME_CACHE_KEY, setting);
+                    return setting;
+                  })
+                }
+                onCancel={() => setVisible("setting")}
+              />
+            )}
             {visible.import && (
               <Importer
                 type={importType}
+                value={importContent}
+                onChange={setImportContetn}
                 onTypeChange={(type) => setImportType(type)}
                 onConfirm={hanleImport}
                 onCancel={() => setVisible("import")}
@@ -221,7 +307,9 @@ const Editor: FC<{}> = () => {
                 onDownload={handleDownload}
               />
             )}
-            {!visible.import && !visible.export && <Previewer />}
+            {!visible.import && !visible.export && !visible.setting && (
+              <Previewer />
+            )}
           </React.Fragment>
         }
       />

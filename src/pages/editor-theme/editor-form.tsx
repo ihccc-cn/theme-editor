@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import clsx from "clsx";
-import { Tabs, Button, Input, Tooltip } from "antd";
+import { Tabs, Button, Input, Empty, Tooltip } from "antd";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { HeadBar } from "./layout";
@@ -62,6 +62,7 @@ export const ThemeRule: FC<{
 // 编辑器表单
 const EditorForm: FC<{
   extra?: any;
+  headTool?: any;
   group?: any;
   tabKey?: string;
   onTabChange?: (key: string) => any;
@@ -71,6 +72,7 @@ const EditorForm: FC<{
   onThemeRemove?: (item: any) => any;
 }> = ({
   extra,
+  headTool,
   group,
   tabKey,
   onTabChange,
@@ -81,7 +83,9 @@ const EditorForm: FC<{
 }) => {
   return (
     <div className="we-theme-editor-content">
-      <HeadBar title="编辑器" extra={extra} />
+      <HeadBar title="编辑器" extra={extra}>
+        {headTool}
+      </HeadBar>
       {!group || group.length === 0 ? (
         <div style={{ height: 38 }} />
       ) : (
@@ -94,6 +98,7 @@ const EditorForm: FC<{
         />
       )}
       <div className="we-theme-editor-list">
+        {data.length === 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         {data.map((item) => {
           return (
             <ThemeRule
