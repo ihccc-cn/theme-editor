@@ -59,7 +59,7 @@ body {
   &-layout-side-content {
     position: fixed;
     top: var(--size-layout-header-height, 52px);
-    bottom: calc(var(--size-cell-gap, 16px) + 32px);
+    bottom: 32px;
     left: -100%;
     z-index: 99;
     transition: 0.2s ease-in-out;
@@ -109,7 +109,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--size-cell-gap, 16px);
-    height: calc(100vh - 116px);
+    height: calc(
+      100vh - var(--size-cell-gap, 16px) * 2 -
+        var(--size-layout-header-height, 56px) - 32px
+    );
     overflow: auto;
   }
 
@@ -164,7 +167,10 @@ body {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      height: calc(100vh - 186px);
+      height: calc(
+        100vh - var(--size-cell-gap, 16px) * 2 -
+          var(--size-layout-header-height, 56px) - 32px - 38px - 32px
+      );
       padding-top: var(--size-cell-gap-sm, 8px);
       padding-right: var(--size-cell-gap-sm, 8px);
       box-sizing: border-box;

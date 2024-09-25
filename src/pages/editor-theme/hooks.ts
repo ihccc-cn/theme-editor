@@ -146,7 +146,6 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   const refreshHashCommand = useRequest(themeServices.hash, {
     pollingInterval: 3000,
     pollingWhenHidden: false,
-    pollingErrorRetryCount: 3,
     onSuccess: (data, refreshSelf) => {
       if (!themeHashRef.current || refreshSelf?.[0]) {
         themeHashRef.current = data;
@@ -349,8 +348,10 @@ export const useRemoteTheme = (config?: { server?: string }) => {
     if (_newTheme) {
       const index = active.index;
       const nextIndex = index === 0 ? index + 1 : index - 1;
-      const key = tabs[nextIndex].key;
-      setActiveTab(key);
+      if (!!tabs[nextIndex]) {
+        const key = tabs[nextIndex].key;
+        setActiveTab(key);
+      }
       setNewThemes((themes) =>
         themes.filter((item) => item.key !== active.key)
       );
