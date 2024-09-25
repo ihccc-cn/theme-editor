@@ -9,4 +9,11 @@ export default defineConfig({
   request: {},
   fastRefresh: true,
   mfsu: false,
+  chainWebpack(memo, { webpack }) {
+    memo.plugin("env").use(webpack.DefinePlugin, [
+      {
+        SERVER_URL: `"${process.env.SERVER_URL}"`,
+      },
+    ]);
+  },
 });

@@ -1,5 +1,5 @@
-/** 默认服务地址 */
-export const THEME_DEFAULT_SERVER = "http://localhost:3550/mock";
+/** @ts-ignore 默认服务地址 */
+export const THEME_DEFAULT_SERVER = SERVER_URL;
 
 /** 缓存 key */
 export const THEME_CACHE_KEY = "__theme_setting__";
