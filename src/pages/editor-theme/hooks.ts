@@ -202,9 +202,9 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   }, [active]);
 
   const tabs = React.useMemo(() => {
-    const list = themesCommand.data || [];
+    const list = (themesCommand.data || []).concat(newThemes);
     const closable = THEME_HIDE_CLOSE_BUTTON ? false : list.length > 1;
-    return list.concat(newThemes).map(({ name, key }: TThemeData) => ({
+    return list.map(({ name, key }: TThemeData) => ({
       key,
       label: name || key,
       closable,
@@ -273,7 +273,12 @@ export const useRemoteTheme = (config?: { server?: string }) => {
         nextThemeRef.current = tabs[nextIndex].key;
       }
     } else {
-      setActiveTab(key);
+      if (key === active.key) {
+        const index = findIndex(key);
+        // 如果删除的选中的主题，是第一个，切换到下一个选项卡，否则，切换到上一个选项卡
+        const nextIndex = index === 0 ? index + 1 : index - 1;
+        setActiveTab(tabs[nextIndex].key);
+      }
       setNewThemes((themes) =>
         themes.filter((item) => item.key !== active.key)
       );
@@ -330,7 +335,8 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   const save = () => {
     const { _newTheme, ...themeData } = currentThemeCommand.data || {};
     if (_newTheme) {
-      addCommand.run(themeData);
+      const list = themeConfig.list;
+      addCommand.run({ name: themeData.name, key: themeData.key, list });
     } else {
       const list = themeConfig.list
         .filter((item: any) => item._changed)
