@@ -3,6 +3,7 @@ let themeList: {
   id: string;
   name: string;
   key: string;
+  extra?: string;
 }[] = [];
 
 let themeItemList: {
@@ -11,6 +12,7 @@ let themeItemList: {
   desc: string;
   name: string;
   value: string | number;
+  props?: Record<string, any>;
   id: string;
   remove?: boolean;
 }[] = [];
@@ -54,7 +56,7 @@ export default {
 
   /** 更新主题 */
   "POST /mock/theme/update": async (req: any, res: any) => {
-    const { id, name, key } = req.body;
+    const { id, name, key, extra } = req.body;
 
     if (
       themeList.findIndex((item) => item.id !== id && item.key === key) > -1
@@ -64,7 +66,7 @@ export default {
     }
 
     const index = themeList.findIndex((item) => item.id === id);
-    themeList.splice(index, 1, { ...themeList[index], name, key });
+    themeList.splice(index, 1, { ...themeList[index], name, key, extra });
 
     changeHash[id] = new Date().getTime();
     res.json({ code: "0", message: "成功！" });

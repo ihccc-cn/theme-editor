@@ -130,6 +130,23 @@ const EditorForm: FC<{
             </ThemeRule>
           );
         })}
+        <ThemeRule
+          data={{
+            label: "扩展样式",
+            desc: "",
+            type: "input",
+            name: "",
+            value: "",
+          }}
+        >
+          <Input.TextArea
+            rows={6}
+            // value={item.value}
+            // onChange={(e: React.FormEvent) =>
+            //   onThemeChange?.(getValue(e), item)
+            // }
+          />
+        </ThemeRule>
       </div>
       {/* <Button disabled block shape="round" type="dashed" icon={"✨"}>
         新增

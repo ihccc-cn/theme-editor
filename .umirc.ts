@@ -1,6 +1,7 @@
 import { defineConfig } from "@umijs/max";
 
 export default defineConfig({
+  define: { SERVER_URL: process.env.SERVER_URL },
   base: "/editor-theme",
   publicPath: "/editor-theme/",
   outputPath: "./editor-theme",
@@ -9,11 +10,4 @@ export default defineConfig({
   request: {},
   fastRefresh: true,
   mfsu: false,
-  chainWebpack(memo, { webpack }) {
-    memo.plugin("env").use(webpack.DefinePlugin, [
-      {
-        SERVER_URL: `"${process.env.SERVER_URL}"`,
-      },
-    ]);
-  },
 });

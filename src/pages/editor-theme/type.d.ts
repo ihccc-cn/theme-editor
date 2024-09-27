@@ -9,8 +9,10 @@ export type TThemeRule = {
   desc: string;
   /** 值类型/输入类型 */
   type: "color" | "number" | "pixel" | "input";
+  /** 输入组件参数 */
+  props?: Record<string, any>;
   /** 是否标记 !important */
-  important?: boolean;
+  // important?: boolean;
   /** 是否标记为删除 */
   remove?: boolean;
 };
@@ -24,7 +26,9 @@ export type TThemeData = {
   /** 变量列表 */
   list: TThemeRule[];
   /** 当前分组选项卡 */
-  groupKey?: string;
+  // groupKey?: string;
+  /** 其它内容 */
+  extra?: string;
 };
 
 export type TGroupedData = {

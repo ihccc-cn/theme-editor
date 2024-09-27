@@ -1,5 +1,5 @@
 import { message } from "antd";
-// @ts-ignore
+import qs from "qs";
 import { saveAs } from "file-saver";
 import { TThemeRule, TThemeData } from "./type";
 
@@ -43,9 +43,13 @@ export const groupBy: {
   ],
   actions: {
     byType: (theme: TThemeRule) => {
-      return { color: "颜色", number: "数值", pixel: "尺寸", input: "输入" }[
-        theme.type
-      ];
+      const typeName = {
+        color: "颜色",
+        number: "数值",
+        pixel: "尺寸",
+        input: "输入",
+      };
+      return typeName[theme.type];
     },
     byName: (theme: TThemeRule) => {
       if (/-layout/.test(theme.name) || /--z/.test(theme.name)) return "布局";
@@ -82,8 +86,9 @@ export const downloadFile = (content: string, fileName: string) => {
 };
 
 const regExp = {
-  css: /\/\*(\s+|\s*)?(\W+)\s+?\*\/\s+\[data-theme=("|')(.+)("|')\].?\{\s+?(\/(\s|.)+)\}/,
-  cssLine: /(\/\*(\W+):+?(\W+)\*\/|\/\*(\W+)\*\/)([-A-z]+):(.+)/,
+  css: /(\/\*(\s*)?(.+)?(\s*)?\*\/\s*?)?\[data-theme=("|')(.+)("|')\].?\{([^\}]*)\}(\s*)?((.|\s)*)?/,
+  cssLine:
+    /\s*?\/\*(\s*)?([^:?]+):?(\s*)?([^?]+)?(\s*)?\??([-=&\w]+)?(\s*)?\*\/\s*?([-\w]+):\s*((\s|.)*)/,
 };
 
 /**
@@ -99,32 +104,32 @@ const regExp = {
 export const getThemeRules = (css: string): TThemeData | null => {
   const cssData = regExp.css.exec(css) || [];
 
-  if (!cssData[4]) return null;
+  if (!cssData[6]) return null;
 
   const themeData: TThemeData = {
-    name: cssData[2],
-    key: cssData[4],
+    name: (cssData[3] || "").trim(),
+    key: cssData[6],
     list: [],
+    extra: (cssData[10] || "").trim(),
   };
 
-  const lines = cssData[6]
-    .replace(/(\r|\n|\s)/g, "")
-    .split(";")
-    .filter((i) => !!i);
+  const lines = (cssData[8] || "").split(";").filter((i) => !!i);
 
   for (let i = 0; i < lines.length; i += 1) {
     const cssLine = lines[i];
     const info = regExp.cssLine.exec(cssLine) || [];
 
-    if (!info[5]) continue;
+    if (!info[8]) continue;
 
     const theme: TThemeRule = {
       type: "input",
-      label: info[2] || info[4] || info[5],
-      desc: info[3] || "",
-      name: info[5],
-      value: info[6] || "",
+      label: info[2],
+      desc: (info[4] || "").trim(),
+      name: info[8],
+      value: info[9] || "",
     };
+
+    if (!!info[6]) theme.props = qs.parse(info[6]);
 
     if (/^(\#|rgb|hsb)/.test(theme.value)) {
       theme.type = "color";
@@ -144,8 +149,12 @@ export const buildCssStyle = (
   themeData: TThemeData,
   config?: { filterRemove?: boolean; noteInfo?: boolean }
 ) => {
-  const { name, key, list } = themeData;
+  const { name, key, list, extra } = themeData;
+
   if (!key) return "";
+
+  const extraContent = !!extra ? "\n\n" + extra : "";
+
   const css = list
     .filter((item) => {
       if (!item.name) return false;
@@ -158,17 +167,18 @@ export const buildCssStyle = (
       let note = "";
       if (!!item.label) {
         note += "  /* " + item.label;
-        if (!!item.desc) note += "：" + item.desc;
+        if (!!item.desc) note += ": " + item.desc;
+        if (!!item.props) note += "?" + qs.stringify(item.props);
         note += " */";
       }
       return [note, cssLine].join("\n");
     })
     .join("\n");
-  // return `@import url(/editor-theme/ant.var.css);
+
   return `/* ${name || key} */
 [data-theme="${key}"]{
 ${css}
-}`;
+}${extraContent}`;
 };
 
 /** 切换主题 */
