@@ -7,3 +7,4 @@
 /src/.umi-test
 /editor-theme
 .swc
+.DS_Store

@@ -24,6 +24,15 @@ export const useVisible = (
 
 type TActiveTab = { id?: string; key: string; index: number };
 
+const ExtraData = {
+  name: "",
+  value: "",
+  label: "扩展样式",
+  desc: "填入你想添加的任意 css 样式到这里～",
+  type: "text",
+  props: { rows: 5 },
+};
+
 /** 本地数据 */
 export const useLocalTheme = () => {
   // 主题列表的所有数据
@@ -105,14 +114,14 @@ export const useLocalTheme = () => {
     }
   };
 
-  const { name, groupKey } = theme.list[active.index] || {};
+  const { name } = theme.list[active.index] || {};
 
   return {
     name,
     active,
     setActive: setActiveTab,
     themeList,
-    groupKey,
+    groupKey: "",
     children,
     findIndex,
     add,
@@ -141,6 +150,14 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   // 保存主题更新状态 hash
   const themeHashRef = React.useRef<null | Record<string, any>>(null);
   const [shouldUpdate, setShouldUpdate] = React.useState<boolean>(false);
+
+  const concatExtra = (data: any) => {
+    const extraItem = Object.assign({}, ExtraData, {
+      id: data.id,
+      value: data.extra || "",
+    });
+    return data.list.concat(extraItem);
+  };
 
   // 请求hash
   const refreshHashCommand = useRequest(themeServices.hash, {
@@ -172,7 +189,7 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   const currentThemeCommand = useRequest(themeServices.profile, {
     manual: true,
     onSuccess: (data) => {
-      themeConfig.resetList(data.list);
+      themeConfig.resetList(concatExtra(data));
     },
   });
 
@@ -228,7 +245,7 @@ export const useRemoteTheme = (config?: { server?: string }) => {
       themeData = newThemes.find((item) => item.key === key);
       if (!!themeData) {
         currentThemeCommand.mutate(themeData);
-        themeConfig.resetList(themeData.list);
+        themeConfig.resetList(concatExtra(themeData));
       }
     }
     setActive({ key, index, id: themeData.id });
@@ -249,7 +266,7 @@ export const useRemoteTheme = (config?: { server?: string }) => {
       setNewThemes((themes) => themes.concat(newTheme));
     }
     currentThemeCommand.mutate(newTheme);
-    themeConfig.resetList(newTheme.list);
+    themeConfig.resetList(concatExtra(newTheme));
     setActive({ index: tabs.length, key: newTheme.key });
     setSaveVisible(newTheme.key, true);
   };
@@ -293,9 +310,9 @@ export const useRemoteTheme = (config?: { server?: string }) => {
       refreshHashCommand.run(true);
     },
   });
-  const update = (theme: { name?: string; key?: string }) => {
-    const { id, name, key } = currentThemeCommand.data || {};
-    updateCommand.run({ id, name, key, ...theme });
+  const update = (theme: { name?: string; key?: string; extra?: string }) => {
+    const { id, name, key, extra } = currentThemeCommand.data || {};
+    return updateCommand.runAsync({ id, name, key, extra, ...theme });
   };
 
   // 修改变量
@@ -316,32 +333,49 @@ export const useRemoteTheme = (config?: { server?: string }) => {
   const addCommand = useRequest(themeServices.create, {
     manual: true,
     onSuccess: () => {
-      setSaveVisible(active.key, false);
       setNewThemes((themes) =>
         themes.filter((item) => item.key !== active.key)
       );
       themesCommand.refresh();
-      refreshHashCommand.run(true);
     },
   });
   const updateListCommand = useRequest(themeServices.updateList, {
     manual: true,
-    onSuccess: () => {
+  });
+  const save = async () => {
+    const { _newTheme, ...themeData } = currentThemeCommand.data || {};
+
+    let extra = "";
+    const list = [...themeConfig.list];
+    const lastItem = list[list.length - 1];
+
+    if (lastItem && lastItem.name === "") {
+      extra = lastItem.value;
+      list.pop();
+    }
+
+    if (_newTheme) {
+      await addCommand.runAsync({
+        name: themeData.name,
+        key: themeData.key,
+        extra,
+        list,
+      });
+    } else {
+      const changedList = list
+        .filter((item: any) => item._changed)
+        .map(({ _changed, ...item }: any) => item);
+      if (changedList.length > 0) {
+        await updateListCommand.runAsync({
+          id: themeData.id,
+          list: changedList,
+        });
+      }
+      await update({ extra });
+
       setSaveVisible(active.key, false);
       currentThemeCommand.refresh();
       refreshHashCommand.run(true);
-    },
-  });
-  const save = () => {
-    const { _newTheme, ...themeData } = currentThemeCommand.data || {};
-    if (_newTheme) {
-      const list = themeConfig.list;
-      addCommand.run({ name: themeData.name, key: themeData.key, list });
-    } else {
-      const list = themeConfig.list
-        .filter((item: any) => item._changed)
-        .map(({ _changed, ...item }: any) => item);
-      updateListCommand.run({ id: themeData.id, list });
     }
   };
 

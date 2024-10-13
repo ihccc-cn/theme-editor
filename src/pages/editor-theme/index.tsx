@@ -42,6 +42,7 @@ const inputComponents = {
   number: <InputNumber />,
   pixel: <SliderWithUnit />,
   input: <Input />,
+  text: <Input.TextArea />,
 };
 
 const DEFAULT_SETTING = {
@@ -83,7 +84,8 @@ const Editor: FC<{}> = () => {
       theme.add({
         name: `新主题-${themeId}`,
         key: `new-theme-${themeId}`,
-        list: theme.list,
+        extra: theme.current.extra,
+        list: theme.list.filter((item) => !!item.name),
       });
     } else {
       theme.remove(themeKey as string);
@@ -125,6 +127,7 @@ const Editor: FC<{}> = () => {
     return buildCssStyle({
       name: theme.current.name,
       key: theme.current.key,
+      extra: theme.current.extra,
       list: theme.list,
     });
   }, [theme.current, theme.list]);
@@ -164,6 +167,7 @@ const Editor: FC<{}> = () => {
         {
           name: theme.current.name,
           key: theme.current.key,
+          extra: theme.current.extra,
           list: theme.list,
         },
         {
@@ -177,6 +181,7 @@ const Editor: FC<{}> = () => {
         // 获取名称
         name: theme.current.name,
         key: theme.current.key,
+        extra: theme.current.extra,
         list: theme.list.filter((item) => !!item.name && !item.remove),
       },
       null,

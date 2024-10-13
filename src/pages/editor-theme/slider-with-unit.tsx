@@ -5,7 +5,7 @@ import { getValue } from "./utils";
 const SliderWithUnit: FC<{
   value?: any;
   onChange?: (value: any) => void;
-}> = ({ value, onChange }) => {
+}> = ({ value, onChange, ...props }) => {
   const [val, unit] = React.useMemo(() => {
     const val = /^(\d|\.)+/.exec(value)?.[0] || 0;
     const uni = /^\d+(\w+)/.exec(value)?.[1] || "";
@@ -21,6 +21,7 @@ const SliderWithUnit: FC<{
       tooltip={{ open: false }}
       min={0}
       max={2000}
+      {...props}
       value={val}
       onChange={handleChange}
     />

@@ -8,7 +8,7 @@ export type TThemeRule = {
   /** 描述 */
   desc: string;
   /** 值类型/输入类型 */
-  type: "color" | "number" | "pixel" | "input";
+  type: "color" | "number" | "pixel" | "input" | "text";
   /** 输入组件参数 */
   props?: Record<string, any>;
   /** 是否标记 !important */

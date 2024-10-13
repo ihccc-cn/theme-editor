@@ -17,14 +17,24 @@ export async function list() {
 }
 
 /** 添加/导入主题 */
-export async function create(data: { name: string; key: string; list: any }) {
+export async function create(data: {
+  name: string;
+  key: string;
+  extra: string;
+  list: any;
+}) {
   return request(`${server}/theme/create`, { method: "POST", data }).then(
     (res: any) => res.code === "0"
   );
 }
 
 /** 更新主题 */
-export async function update(data: { id: string; name: string; key: string }) {
+export async function update(data: {
+  id: string;
+  name: string;
+  key: string;
+  extra: string;
+}) {
   return request(`${server}/theme/update`, { method: "POST", data }).then(
     (res: any) => res.message
   );

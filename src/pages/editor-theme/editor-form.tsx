@@ -107,7 +107,7 @@ const EditorForm: FC<{
               key={item.name}
             >
               <div className="we-theme-rule-item">
-                {item.type !== "input" && (
+                {item.type !== "input" && item.type !== "text" && (
                   <div className="we-theme-rule-view">
                     <Input
                       value={item.value}
@@ -120,6 +120,7 @@ const EditorForm: FC<{
                 <div className="we-theme-rule-input">
                   {React.isValidElement(inputComponents[item.type])
                     ? React.cloneElement(inputComponents[item.type], {
+                        ...item.props,
                         value: item.value,
                         onChange: (e: React.FormEvent) =>
                           onThemeChange?.(getValue(e, item.type), item),
@@ -130,23 +131,6 @@ const EditorForm: FC<{
             </ThemeRule>
           );
         })}
-        <ThemeRule
-          data={{
-            label: "扩展样式",
-            desc: "",
-            type: "input",
-            name: "",
-            value: "",
-          }}
-        >
-          <Input.TextArea
-            rows={6}
-            // value={item.value}
-            // onChange={(e: React.FormEvent) =>
-            //   onThemeChange?.(getValue(e), item)
-            // }
-          />
-        </ThemeRule>
       </div>
       {/* <Button disabled block shape="round" type="dashed" icon={"✨"}>
         新增

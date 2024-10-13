@@ -34,9 +34,9 @@ export default {
 
   /** 添加/导入主题 */
   "POST /mock/theme/create": async (req: any, res: any) => {
-    const { name, key, list } = req.body;
+    const { name, key, extra, list } = req.body;
     const id = `theme-${__UID__++}`;
-    const themeData = { id, name, key };
+    const themeData = { id, name, key, extra };
     const index = themeList.findIndex((item) => item.key === key);
     if (index > -1) {
       // 已存在，删除旧主题数据

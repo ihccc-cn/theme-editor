@@ -48,13 +48,14 @@ export const groupBy: {
         number: "数值",
         pixel: "尺寸",
         input: "输入",
+        text: "输入",
       };
       return typeName[theme.type];
     },
     byName: (theme: TThemeRule) => {
       if (/-layout/.test(theme.name) || /--z/.test(theme.name)) return "布局";
       if (/-border/.test(theme.name)) return "边框";
-      if (/--color-text/.test(theme.name)) return "文本颜色";
+      if (/--color-text/.test(theme.name)) return "文本";
       if (/--color-bg/.test(theme.name)) return "背景";
       if (/--color-/.test(theme.name)) return "颜色";
       if (/--size-/.test(theme.name)) return "尺寸";
@@ -129,7 +130,14 @@ export const getThemeRules = (css: string): TThemeData | null => {
       value: info[9] || "",
     };
 
-    if (!!info[6]) theme.props = qs.parse(info[6]);
+    if (!!info[6]) {
+      theme.props = qs.parse(info[6]);
+      if (typeof theme.props === "object") {
+        Object.entries(theme.props).forEach(([key, value]) => {
+          if (/\d+/.test(value)) (theme.props as any)[key] = Number(value);
+        });
+      }
+    }
 
     if (/^(\#|rgb|hsb)/.test(theme.value)) {
       theme.type = "color";
